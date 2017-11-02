@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <style>
+        body {
+            margin: 10px;
+            padding: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pong Game</h1>
+    <canvas id="pongTable" width="700" height="500" style="border:2px solid black;"> </canvas>
+    <script>
+        var canvas = document.getElementById('pongTable');
+        var text = canvas.getContext('2d');
+
+        text.font = "bold 22px sans-serif"
+        text.fillStyle = 'red';
+        text.fillText('text placement', 75, 150);
+    </script>
+    <script>
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.fillStyle = "green";
+        ctx.fillRect(3, 3, 694, 494);
+        ctx.closePath();
+
+
+        ctx.beginPath();
+        ctx.moveTo(350, 0);
+        ctx.lineTo(350, 500);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.rect(660, 150, 20, 100);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.rect(10, 250, 20, 100);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(400, 200, 10, 0, Math.PI * 2, false);
+        ctx.fillStyle = "white";
+        ctx.fill();
+        ctx.closePath();
+    </script>
+
+</body>
+
+</html>
