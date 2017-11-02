@@ -17,9 +17,15 @@
     <h1>Pong Game</h1>
     <canvas id="pongTable" style="border:2px solid black;"> </canvas>
     <script>
+        var animate = window.requestAnimationFrame ||
+            function(callback) {
+                window.setTimeout(callback, 1000 / 60)
+            };
+
         var canvas = document.getElementById('pongTable');
         var width = 700;
         var height = 500;
+        let paddleSpeed = 8;
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
@@ -34,6 +40,11 @@
             player.render();
             computer.render();
             ball.render();
+        };
+
+        var step = function() {
+            render();
+            animate(step);
         };
 
         function Net() {}
@@ -51,18 +62,31 @@
 
         function Paddle(x, y, width, height, color) {
             this.x = x;
-            this.y = y;
+            this.y = (canvas.height / 2) - (height / 2);
             this.width = width;
             this.height = height;
             this.color = color;
+            this.speed = 0;
         }
         Paddle.prototype.render = function() {
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         };
 
+        Paddle.prototype.move = function(y) {
+            this.y += y;
+            this.speed = y;
+            if (this.y < 3) {
+                this.y = 3;
+                this.speed = 0;
+            } else if ((this.y + this.height) > (canvas.height - 6)) {
+                this.y = canvas.height - (this.height + 4);
+                this.speed = 0;
+            }
+        };
+
         function Computer() {
-            this.paddle = new Paddle(10, 250, 20, 100, "red");
+            this.paddle = new Paddle(14, 250, 20, 100, "red");
         }
 
         Computer.prototype.render = function() {
@@ -70,7 +94,7 @@
         };
 
         function Player() {
-            this.paddle = new Paddle(660, 150, 20, 100, "blue");
+            this.paddle = new Paddle(664, 150, 20, 100, "blue");
         }
 
         Player.prototype.render = function() {
@@ -78,8 +102,8 @@
         };
 
         function Ball(x, y) {
-            this.x = x;
-            this.y = y;
+            this.x = canvas.width / 2;
+            this.y = canvas.height / 2;
         }
 
         Ball.prototype.render = function() {
@@ -90,8 +114,19 @@
         };
 
         document.body.appendChild(canvas);
+
+
         window.onload = function() {
-            render();
+            document.addEventListener('keypress', (event) => {
+                var moveKey = event.key;
+                if (moveKey == "'") {
+                    player.paddle.move(-paddleSpeed);
+                } else if (moveKey == "/") {
+                    player.paddle.move(paddleSpeed);
+                }
+
+            });
+            step();
         };
     </script>
 
