@@ -25,7 +25,7 @@
         var canvas = document.getElementById('pongTable');
         var width = 700;
         var height = 500;
-        let paddleSpeed = 8;
+        let paddleSpeed = 3;
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
@@ -42,7 +42,12 @@
             ball.render();
         };
 
+        var update = function() {
+            ball.update(player.paddle, computer.paddle);
+        };
+
         var step = function() {
+            update();
             render();
             animate(step);
         };
@@ -74,7 +79,7 @@
         };
 
         Paddle.prototype.move = function(y) {
-            this.y += y;
+            this.y += 3 * y;
             this.speed = y;
             if (this.y < 3) {
                 this.y = 3;
@@ -104,6 +109,8 @@
         function Ball(x, y) {
             this.x = canvas.width / 2;
             this.y = canvas.height / 2;
+            this.x_speed = 3;
+            this.y_speed = 0;
         }
 
         Ball.prototype.render = function() {
@@ -111,6 +118,40 @@
             ctx.arc(this.x, this.y, 10, 2 * Math.PI, false);
             ctx.fillStyle = "white";
             ctx.fill();
+        };
+
+        Ball.prototype.update = function(p1, p2) {
+            this.x += this.x_speed;
+            this.y += this.y_speed;
+            var lx = this.x - 10;
+            var ly = this.y - 10;
+            var rx = this.x + 10;
+            var ry = this.y + 10;
+
+            if (ly < 0) {
+                this.y = 10;
+                this.y_speed = -this.y_speed;
+            } else if (ry > canvas.height) {
+                this.y = canvas.height - 10;
+                this.y_speed = -this.y_speed;
+            }
+
+            if (this.x < 0 || this.x > canvas.width) { // a point was scored
+                this.x_speed = 3;
+                this.y_speed = 0;
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2;
+            }
+
+            if (lx < (p1.x + p1.width) && rx > p1.x && ly < (p1.y + p1.height) && ry > p1.y) {
+                this.x_speed = -3;
+                this.y_speed += (p1.speed / 2);
+                this.x += this.x_speed;
+            } else if (lx < (p2.x + p2.width) && rx > p2.x && ly < (p2.y + p2.height) && ry > p2.y) {
+                this.x_speed = 3;
+                this.y_speed += (p2.speed / 2);
+                this.x += this.x_speed;
+            };
         };
 
         document.body.appendChild(canvas);
