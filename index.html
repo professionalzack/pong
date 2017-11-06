@@ -25,7 +25,7 @@
         var canvas = document.getElementById('pongTable');
         var width = 700;
         var height = 500;
-        let paddleSpeed = 3;
+        let paddleSpeed = 6;
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
@@ -43,7 +43,9 @@
         };
 
         var update = function() {
+            computer.update(ball);
             ball.update(player.paddle, computer.paddle);
+
         };
 
         var step = function() {
@@ -96,6 +98,23 @@
 
         Computer.prototype.render = function() {
             this.paddle.render();
+        };
+
+        Computer.prototype.update = function(ball) {
+            var ball_y = ball.y;
+            var handle = this.paddle.y + (this.paddle.height / 2);
+            var diff = handle - ball_y;
+            if (diff < 0) {
+                paddleSpeed = 1;
+            } else if (diff > 0) {
+                paddleSpeed = -1;
+            }
+            this.paddle.move(paddleSpeed);
+            if (this.paddle.y < 4) {
+                this.paddle.y = 4;
+            } else if (this.paddle.y + this.paddle.height > 494) {
+                this.paddle.y = 494 - this.paddle.height;
+            }
         };
 
         function Player() {
