@@ -58,6 +58,13 @@
             animate(step);
         };
 
+        function refresh() {
+            player.paddle.y = (canvas.height / 2) - (player.paddle.height / 2);
+            computer.paddle.y = (canvas.height / 2) - (computer.paddle.height / 2);
+            player.paddle.speed = 0;
+            computer.paddle.speed = 0;
+        }
+
         function Net() {}
 
         Net.prototype.render = function() {
@@ -161,20 +168,34 @@
 
             if (this.x < 0) {
                 p1_score += 1;
-                document.getElementById("p1_score").innerHTML = "Player 1: " + p1_score;
-                this.x_speed = -3;
-                this.y_speed = 0;
-                this.x = canvas.width / 2;
-                this.y = canvas.height / 2;
+                refresh();
+                if (p1_score >= 11) {
+                    alert("Congratulations! Player 1 wins");
+                    p1_score = 0;
+                    p2_score = 0;
+                } else {
+                    document.getElementById("p1_score").innerHTML = "Player 1: " + p1_score;
+                    this.x_speed = -3;
+                    this.y_speed = 0;
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height / 2;
+                }
             }
 
             if (this.x > canvas.width) {
                 p2_score += 1;
-                document.getElementById("p2_score").innerHTML = "Computer: " + p2_score;
-                this.x_speed = 3;
-                this.y_speed = 0;
-                this.x = canvas.width / 2;
-                this.y = canvas.height / 2;
+                refresh();
+                if (p2_score >= 11) {
+                    alert("Whoops! Computer wins.... try again!");
+                    p1_score = 0;
+                    p2_score = 0;
+                } else {
+                    document.getElementById("p2_score").innerHTML = "Computer: " + p2_score;
+                    this.x_speed = 3;
+                    this.y_speed = 0;
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height / 2;
+                }
             }
 
             if (lx < (p1.x + p1.width) && rx > p1.x && ly < (p1.y + p1.height) && ry > p1.y) {
